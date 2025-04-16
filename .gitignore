@@ -18,7 +18,7 @@ lib/
 lib64/
 parts/
 sdist/
-var/
+
 wheels/
 share/python-wheels/
 *.egg-info/
@@ -178,3 +178,4 @@ cython_debug/
 data/*.csv
 data/*.json
 db/
+.history
