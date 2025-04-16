@@ -1,8 +1,4 @@
-# Makefile for Go project
-
-# Detect the operating system and architecture.
-
-include makefiles/osdetect.mk
+# Makefile
 
 # -----------------------------------------------------------------------------
 # Variables
@@ -18,7 +14,16 @@ BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty  | sed 
 DOCKER_CONTAINER_NAME := $(PROGRAM_NAME)
 DOCKER_IMAGE_NAME := senzing/$(PROGRAM_NAME)
 
+# -----------------------------------------------------------------------------
+# The first "make" target runs as default.
+# -----------------------------------------------------------------------------
 
+.PHONY: default
+default: help
+
+# -----------------------------------------------------------------------------
+# Build
+# -----------------------------------------------------------------------------
 
 .PHONY: docker-build
 docker-build:
@@ -26,6 +31,18 @@ docker-build:
 		--tag $(DOCKER_IMAGE_NAME) \
 		--tag $(DOCKER_IMAGE_NAME):$(BUILD_VERSION) \
 		.
+
+# -----------------------------------------------------------------------------
+# Run
+# -----------------------------------------------------------------------------
+
+.PHONY: docker-run
+docker-run:
+	@docker run \
+		--interactive \
+		--rm \
+		--tty \
+		$(DOCKER_IMAGE_NAME):$(BUILD_VERSION)
 
 # -----------------------------------------------------------------------------
 # Clean
@@ -39,7 +56,6 @@ clean:
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
-
 
 .PHONY: help
 help:
