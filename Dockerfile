@@ -4,9 +4,17 @@ ENV SENZING_ENGINE_CONFIGURATION_JSON='{"PIPELINE":{"CONFIGPATH":"/etc/opt/senzi
 
 USER root
 
+# COPY ./rootfs/opt/senzing/g2/python/G2CompressedFile.py /opt/senzing/g2/python/G2CompressedFile.py
+# COPY ./rootfs/opt/senzing/g2/python/DumpStack.py        /opt/senzing/g2/python/DumpStack.py
+# COPY ./rootfs/opt/senzing/g2/python/G2Export.py         /opt/senzing/g2/python/G2Export.py
+# COPY ./rootfs/opt/senzing/g2/python/G2Loader.py         /opt/senzing/g2/python/G2Loader.py
+# COPY ./rootfs/opt/senzing/g2/python/G2S3.py             /opt/senzing/g2/python/G2S3.py
 COPY ./rootfs /
 
+
 USER 1001
+
+ENV PATH=${PATH}:/app
 
 # Runtime execution.
 
