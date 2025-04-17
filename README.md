@@ -150,7 +150,7 @@ Further visual exploration of the graph can be done using the Kùzu Explorer UI,
 ## Graph visualization in Kùzu Explorer
 
 To visualize the graph in Kùzu using its browser-based UI, Kùzu
-Explorer, eun the following commands from this
+Explorer, run the following commands from this
 root directory where the `docker-compose.yml` file is:
 
 ```bash
