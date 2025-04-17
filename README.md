@@ -24,6 +24,10 @@ Visit the websites to see the installation instructions for each tool.
 - [Kuzu](https://kuzudb.com/)
 - [Senzing](https://senzing.com/)
 
+## Data download
+
+Follow the instructions in the [data/README.md](data/README.md) file to download the required data.
+
 ## Setup
 
 It's recommended to use uv to install the dependencies for this workshop.
