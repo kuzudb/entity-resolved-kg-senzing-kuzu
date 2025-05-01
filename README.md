@@ -166,7 +166,7 @@ also provided in the `create_graph.py` file if you want to run the workflow with
 The following files contain utility functions for the sequence of
 preprocessing steps required to create the graph:
 
- - `open_sanctions.py`: Handles the processing of the Open Sanctions data.
+ - `open_sanctions.py`: Handles the processing of the OpenSanctions data.
  - `open_ownership.py`: Handles the processing of the Open Ownership data.
  - `process_senzing.py`: Handles the processing of the entity resolution export from Senzing.
 
