@@ -53,19 +53,19 @@ df_sz_os = sz_export.df_rec.filter(pl.col("source") == "OPEN-SANCTIONS").select(
 # Copy data to Kuzu graph
 conn.execute("CREATE NODE TABLE IF NOT EXISTS OpenSanctions (id STRING PRIMARY KEY, kind STRING, name STRING, addr STRING, url STRING)")
 conn.execute("CREATE NODE TABLE IF NOT EXISTS OpenOwnership (id STRING PRIMARY KEY, kind STRING, name STRING, addr STRING, country STRING)")
-conn.execute("COPY OpenSanctions FROM df_os")
-conn.execute("COPY OpenOwnership FROM df_oo")
-
 conn.execute("CREATE NODE TABLE IF NOT EXISTS Risk (topic STRING PRIMARY KEY)")
 conn.execute("CREATE NODE TABLE IF NOT EXISTS Entity (id STRING PRIMARY KEY, descrip STRING)")
 conn.execute("CREATE REL TABLE IF NOT EXISTS Role (FROM OpenOwnership TO OpenOwnership, role STRING, date DATE)")
+
+conn.execute("COPY OpenSanctions FROM df_os")
+conn.execute("COPY OpenOwnership FROM df_oo")
 conn.execute("COPY Risk FROM (LOAD FROM df_risk RETURN DISTINCT topic)")
 conn.execute("COPY Entity FROM (LOAD FROM df_ent RETURN id, descrip)")
 conn.execute("COPY Role FROM df_oa_relationships")
 
 # Create Related table between entities
-conn.execute("CREATE REL TABLE IF NOT EXISTS Related (FROM Entity TO Entity, why STRING, level INT8)")
-conn.execute("COPY Related FROM df_rel")
+conn.execute("CREATE REL TABLE IF NOT EXISTS Related (FROM Entity TO Entity, why STRING, level INT8)");
+conn.execute("COPY Related FROM df_rel");
 
 # Create Matched table between multiple sets of entities
 conn.execute(
@@ -85,4 +85,6 @@ conn.execute("COPY Matched FROM df_sz_oo (from='Entity', to='OpenOwnership')");
 conn.execute("CREATE REL TABLE IF NOT EXISTS HasRisk (FROM OpenSanctions TO Risk)")
 conn.execute("COPY HasRisk FROM df_risk")
 
+# We've successfully combined the data from OpenSanctions, Open Ownership, and resolved entities from Senzing to create a graph that's persisted in Kuzu!
+# This graph is of high enough quality that it can be used for a variety of investigative tasks downstream. Happy querying!
 print(f"Finished processing data and created Kuzu graph at the following path: {DB_PATH}")
