@@ -7,6 +7,13 @@ The focus is to show how to create high-quality knowledge graphs from heterogene
 data sources using Kùzu -- which is an embedded, open source _graph database_ -- and
 Senzing -- which is an SDK for _entity resolution_.
 
+### Slides
+
+To follow along, download the slides from the following links:
+
+- Kuzu: [slides](https://docs.google.com/presentation/d/1tErhnbwkjSxREbfpxKdhSOXMwm9ReLKAYxm7_vl6J4U/view?usp=sharing)
+- Senzing: [slides](https://drive.google.com/file/d/1EL0TnzWDsNqKE53mPOwXc9UfImkgHH2q/view?usp=sharing)
+
 
 ## Background
 
@@ -18,11 +25,15 @@ and so on. We'll use "slices" of datasets from the following open data providers
   - <https://www.opensanctions.org/>
   - <https://www.openownership.org/>
 
+### OpenSanctions
+
 [OpenSanctions](https://www.opensanctions.org/) provides the "risk" category of data.
 In other words, this describes people and organizations who are known risks for FinCrime.
 There is also the [`yente`](https://github.com/opensanctions/yente) API which provides
 HTTP endpoints based on the [_FollowTheMoney_](https://followthemoney.tech/) data model
 used for investigations and OSInt.
+
+### Open Ownership
 
 [Open Ownership](https://www.openownership.org/) provides the "link" category of data.
 This describes [_ultimate beneficial ownership_](https://en.wikipedia.org/wiki/Beneficial_ownership)
@@ -40,9 +51,15 @@ There is also a repository with these datasets which are already formatted for
 use in Senzing <https://www.opensanctions.org/docs/bulk/senzing/> although these
 full sources are quite large to download.
 
-For the purposes of our tutorial, we've selected "slices" of data which connect to
-produce interesting subgraphs that illustrate patterns of bad-actor tradecraft.
+## Dataset
 
+For the purposes of this tutorial, we've selected "slices" of data from
+OpenSanctions and Open Ownership which connect to produce interesting subgraphs that illustrate
+patterns of bad-actor tradecraft. 
+
+Follow the instructions in the [data/README.md](data/README.md) file
+to download the required data and inspect the JSON files to get an idea of 
+their contents.
 
 ## Tools
 
@@ -93,12 +110,6 @@ the `requirements.txt` file:
 ```bash
 pip install -r requirements.txt
 ```
-
-
-## Data download
-
-Follow the instructions in the [data/README.md](data/README.md) file
-to download the required data.
 
 
 ## Running the Senzing container
