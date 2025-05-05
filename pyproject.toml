@@ -8,12 +8,14 @@ dependencies = [
     "icecream==2.1.4",
     "jupyterlab==4.4.1",
     "kuzu==0.9.0",
+    "networkx>=3.4.2",
     "polars==1.29.0",
     "pyarrow==20.0.0",
     "python-dotenv==1.1.0",
     "watermark==2.5.0",
     "yfiles-jupyter-graphs==1.10.5",
     "yfiles-jupyter-graphs-for-kuzu==0.0.4",
+    "networkx==3.4.2",
 ]
 
 [dependency-groups]
