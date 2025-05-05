@@ -227,3 +227,23 @@ LIMIT 100
 ```
 
 ![](./assets/example-subgraph.png)
+
+## Optional: NetworkX
+
+The `create_graph.ipynb` notebook also contains an optional step to convert the Kùzu graph to a NetworkX graph.
+We run a NetworkX graph algorithm called Betweenness Centrality to find the most important nodes in the graph.
+
+Victor Nyland Poulsen is the entity in the graph with the highest betweenness centrality.
+
+| id | descrip | betweenness_centrality |
+| --- | --- | --- |
+| "sz_100036" | "Victor Nyland Poulsen" | 0.002753 |
+| "sz_100225" | "Daniel Symmons" | 0.002251 |
+| "sz_100003" | "Kenneth Kurt Hansen" | 0.001314 |
+| "sz_100092" | "Daniel Lee Symons" | 0.001273 |
+| "sz_100023" | "Rudolf Esser" | 0.001176 |
+
+![](./assets/betweenness-centrality.png)
+
+The visualization is shown using the circular layout in yFiles to represent the large number of relationships more compactly.
+Check out the notebook and try more graph visualizations and algorithms to further analyze the data!

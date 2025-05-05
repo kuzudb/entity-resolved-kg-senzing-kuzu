@@ -8,3 +8,4 @@ yfiles-jupyter-graphs==1.10.5
 yfiles-jupyter-graphs-for-kuzu==0.0.4
 ipykernel==6.29.5
 jupyterlab==4.4.1
+networkx==3.4.2
