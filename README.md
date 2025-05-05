@@ -237,13 +237,13 @@ Victor Nyland Poulsen is the entity in the graph with the highest betweenness ce
 
 | id | descrip | betweenness_centrality |
 | --- | --- | --- |
-| "sz_100036" | "Victor Nyland Poulsen" | 0.002753 |
-| "sz_100225" | "Daniel Symmons" | 0.002251 |
-| "sz_100003" | "Kenneth Kurt Hansen" | 0.001314 |
-| "sz_100092" | "Daniel Lee Symons" | 0.001273 |
-| "sz_100023" | "Rudolf Esser" | 0.001176 |
+| sz_100036 | Victor Nyland Poulsen | 0.002753 |
+| sz_100225 | Daniel Symmons | 0.002251 |
+| sz_100003 | Kenneth Kurt Hansen | 0.001314 |
+| sz_100092 | Daniel Lee Symons | 0.001273 |
+| sz_100023 | Rudolf Esser | 0.001176 |
 
 ![](./assets/betweenness-centrality.png)
 
-The visualization is shown using the circular layout in yFiles to represent the large number of relationships more compactly.
+The visualization shown uses the circular layout in yFiles to represent a large number of relationships more compactly.
 Check out the notebook and try more graph visualizations and algorithms to further analyze the data!
