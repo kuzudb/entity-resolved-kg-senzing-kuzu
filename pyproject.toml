@@ -16,6 +16,8 @@ dependencies = [
     "yfiles-jupyter-graphs==1.10.5",
     "yfiles-jupyter-graphs-for-kuzu==0.0.4",
     "networkx==3.4.2",
+    "pydantic>=2.11.7",
+    "numpy>=2.3.2",
 ]
 
 [dependency-groups]

@@ -298,10 +298,10 @@ case.
 We will generate synthetic data to simulate money laundering. We'll
 use shell companies which were part of real-world fraud network, then
 generate simulated transactions based on statistical analysis of
-leaked bank data.
+leaked bank data. Simulation methods are defined in the `aml.py`
+Python module.
 
-First we extract the shell companies from a possible fraud ring:
+First we extract the shell companies from a possible fraud ring,
+then generate synthetic data:
 
   - `aml_transact.ipynb`: extracts a fraud network, then generates transactions
-
-(WIP)

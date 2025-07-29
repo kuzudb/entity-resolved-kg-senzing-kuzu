@@ -12,6 +12,7 @@ from enum import StrEnum, auto
 import datetime
 import json
 import random
+import sys
 import typing
 
 from icecream import ic
@@ -82,7 +83,34 @@ class TradecraftDeal (StrEnum):
 class Simulation:
     """
 Simulating patterns of money laundering tradecraft.
+
+Money laundering process via shell companies:
+  1. origins
+  2. layering
+  3. deals
+
+plausible `origins` for deposits
+  - local bank transfer
+  - cryptocoin exchanges
+  - Amazon Marketplace sales
+  - Rosoboronexport weapon sales kick-backs
+
+plausible `layering` tradecraft:
+  - initial burst in volume after opening
+  - mutual payers/remitters
+  - RMF bleed off N% on each step
+  - overnight balance low compared with total activity
+  - reuse of invoices
+
+plausible `deals` for payments:
+  - local bank transfer
+  - cryptocoin exchanges
+  - merchandise for Amazon Marketplace
+  - Hermitage Capital Management
+  - real estate, property management, leases
+  - payroll outsourcing for "staff"
     """
+
     XACT_LIMIT: NonNegativeFloat = 99000.0
 
     INTERDAY_MEDIAN: float = 8.7
@@ -242,7 +270,58 @@ and creating opening balances.
                 shell.take_xact(xact)
 
 
-    def do_deal (
+    def layer_rmf (
+        self,
+        ) -> None:
+        """
+Simulate layering based on _rapid movement of funds_ (RMF) tradecraft.
+        """
+        shell_seq: list = random.sample(self.shells, len(self.shells))
+
+        # generate origin of funds
+        lead_shell: ShellCorp = shell_seq[0]
+
+        remitter: str = random.choice([
+            "Amazon Marketplace",
+            "Rosoboronexport",
+            "Hermitage Capital Management",
+        ])
+
+        date: datetime.datetime = self.gen_xact_timing(lead_shell.last_active)
+        amount: NonNegativeFloat = round(self.gen_xact_amount(), -3)
+
+        xact: Transaction = Transaction(
+            date = date,
+            amount = amount,
+            remitter = remitter,
+            receiver = lead_shell.name,
+            descript = "invoiced services",
+        )
+
+        self.xact_log.append(xact)
+        lead_shell.take_xact(xact)
+
+        # layer through other shell companies,
+        # bleeding off N% at each step,
+        # until dumping back to the first one
+        for ind, shell in enumerate(shell_seq):
+            next_shell: ShellCorp = shell_seq[(ind + 1) % len(shell_seq)]
+            date = self.gen_xact_timing(date)
+            amount *= 1.0 - self.rng_exponential(scale = .1)
+
+            xact = Transaction(
+                date = date,
+                amount = amount,
+                remitter = shell.name,
+                receiver = next_shell.name,
+                descript = "invoiced services",
+            )
+
+            self.xact_log.append(xact)
+            next_shell.take_xact(xact)
+
+
+    def gen_deal (
         self,
         shell: ShellCorp,
         ) -> None:
@@ -253,9 +332,14 @@ company's bank account.
         amount: NonNegativeFloat = min(shell.balance, round(self.gen_xact_amount(), -3))
         date: datetime.datetime = self.gen_xact_timing(shell.last_active)
 
+        ## for now, only crypto coin purchases
+        ## later we'll add other deals, e.g., real estate
         deal: TradecraftDeal = TradecraftDeal.CRYPTO
-        receiver: str = random.choice(self.SKETCH_CRYPTO)
-        descript: str = "investment"
+
+        match deal:
+            case TradecraftDeal.CRYPTO:
+                receiver: str = random.choice(self.SKETCH_CRYPTO)
+                descript: str = "investment"
 
         xact: Transaction = Transaction(
             date = date,
@@ -267,6 +351,17 @@ company's bank account.
 
         self.xact_log.append(xact)
         shell.take_xact(xact, deposit = False)
+
+
+    def drain_into_deals (
+        self,
+        ) -> None:
+        """
+Generate deals to drain the remaining balances for each shell company.
+        """
+        for shell in self.shells:
+            while shell.balance > 0.0:
+                self.gen_deal(shell)
 
 
     def get_xact_df (
@@ -282,41 +377,15 @@ Returns a `polars` DataFrame of the generated transactions.
 
 
 if __name__ == "__main__":
-    ## money laundering process via shell companies
-    ##  1. origins
-    ##  2. layering
-    ##  3. deals
-
     sim: Simulation = Simulation()
     sim.gen_shell_corps(SHELL_DATA)
 
-    ## drain accounts into deals
-    for shell in sim.shells:
-        while shell.balance > 0.0:
-            sim.do_deal(shell)
+    ## layering
+    sim.layer_rmf()
 
-    ## report
+    ## drain accounts into deals
+    sim.drain_into_deals()
+
+    ## export synthetic data
     df: pl.DataFrame = sim.get_xact_df()
     ic(df)
-
-
-## plausible `origins`
-##  - local bank transfer
-##  - cryptocoin exchanges
-##  - Amazon merchandise sales
-##  - Rosoboronexport
-
-## plausible `layering` tradecraft
-##  - initial burst in volume after opening
-##  - mutual payers/remitters
-##  - RMF bleed off N% on each step
-##  - overnight balance low compared with total activity
-##  - reuse of invoices
-
-## plausible `deals`
-##  - local bank transfer
-##  - cryptocoin exchanges
-##  - merchandise for Amazon
-##  - Hermitage Capital Management
-##  - real estate, property management, leases
-##  - payroll outsourcing for "staff"
