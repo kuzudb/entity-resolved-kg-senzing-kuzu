@@ -277,9 +277,9 @@ further analyze the data!
 ## Money Laundering
 
 The [AML.md](AML.md) file enumerates heuristics used by fraud analysts
-for transaction monitoring and alerts. These points describe how to
-assess whether a bank account has been used for money laundering. In
-other words, this is helpful info for anyone who is new to anti-money
+for transaction monitoring and alerts. These consideration describe
+how to assess if a bank account has been used for money laundering. In
+other words, this is helpful info for anyone who's new to anti-money
 laundering (AML) or anyone thinking of becoming a money launderer.
 
 While it's possible to get open data describing companies, their
@@ -289,20 +289,19 @@ as financial transactions. Generally this class of data is much too
 confidential; however, in some cases transactions for large-scale
 fraud have been leaked.
 
-We will generate synthetic data to simulate money laundering.  We'll
+[Howard Wilkinson](https://www.ft.com/content/32d47fd8-c18b-11e8-8d55-54197280d3f7)
+was the whistleblower regarding massive scale money laundering at
+the Estonia branch of Danske Bank, including the
+[Azerbaijani Laundromat](https://www.occrp.org/en/project/the-azerbaijani-laundromat)
+case.
+
+We will generate synthetic data to simulate money laundering. We'll
 use shell companies which were part of real-world fraud network, then
-generate simulated transactions based on leaked data from the
-[Azerbaijani Laundromat](https://www.occrp.org/en/project/the-azerbaijani-laundromat).
+generate simulated transactions based on statistical analysis of
+leaked bank data.
 
-First we extract the shell companies related to the case of Abassin
-Badshah, who was convicted of large-scale tax evasion based on Papa
-John's pizza franchises which he and his spouse owned and operated in
-south London:
-
-  - <https://www.newsshopper.co.uk/news/19164815.boss-bromley-catford-papa-johns-stores-jailed/>
-  - <https://find-and-update.company-information.service.gov.uk/disqualified-officers/natural/mGquuTbmESWiRmHJPz1ObUwfDgk>
-
-Run this Jupyter notebook to extract the shell companies in the
-Badshah case:
+First we extract the shell companies from a possible fraud ring:
 
   - `aml_transact.ipynb`: extracts a fraud network, then generates transactions
+
+(WIP)
