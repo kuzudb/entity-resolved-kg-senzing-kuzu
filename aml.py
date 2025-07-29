@@ -8,16 +8,19 @@ This is a WIP toward generating synthetic data for bank transactions
 which emulate typical tradecraft patterns employed in money laundering.
 """
 
+from enum import StrEnum, auto
 import datetime
+import json
 import random
 import typing
 
 from icecream import ic
 from pydantic import BaseModel, NonNegativeFloat
 import numpy as np
+import polars as pl
 
 
-SHELL_CORPS: typing.Dict[ str, list ] = {
+SHELL_DATA: typing.Dict[ str, list ] = {
     "BARLLOWS SERVICES LTD": [
         "3 Market Parade, 41 East Street, Bromley, BR1 1QN",
         "31 Quernmore Close, Bromley, Kent, United Kingdom, BR1 4EL",
@@ -31,11 +34,59 @@ SHELL_CORPS: typing.Dict[ str, list ] = {
 }
 
 
+class Transaction (BaseModel):
+    """
+A data class representing one money transfer transaction.
+    """
+    date: datetime.datetime
+    amount: NonNegativeFloat
+    remitter: str
+    receiver: str
+    descript: str
+
+
+class ShellCorp (BaseModel):
+    """
+A data class representing one shell company.
+    """
+    name: str
+    address: str
+    bank: str
+    balance: NonNegativeFloat = 0.0
+    last_active: datetime.datetime = datetime.datetime.today()
+
+    def take_xact (
+        self,
+        xact: Transaction,
+        *,
+        deposit: bool = True,
+        ) -> None:
+        """
+Handle one transaction.
+        """
+        self.last_active = max(self.last_active, xact.date)
+
+        if deposit:
+            self.balance += xact.amount
+        else:
+            self.balance -= xact.amount
+
+
+class TradecraftDeal (StrEnum):
+    ## cryptocoin exchanges
+    CRYPTO = auto()
+    ## merchandise for Amazon
+    AMZN = auto()
+
+
 class Simulation:
     """
 Simulating patterns of money laundering tradecraft.
     """
     XACT_LIMIT: NonNegativeFloat = 99000.0
+
+    INTERDAY_MEDIAN: float = 8.7
+    INTERDAY_STDEV: float = 32.745006
 
     SKETCH_BANKS: typing.List[ str ] = [
         "BCCI",
@@ -46,6 +97,17 @@ Simulating patterns of money laundering tradecraft.
         "Banco Alas",
         "Santa Anna National Bank",
         "Pulaski Savings",
+    ]
+
+    SKETCH_CRYPTO: typing.List[ str ] = [
+        "BitMEX",
+        "BIPPAX",
+        "FX Alliance Traders",
+        "Pinance.io",
+        "DCEX Exchange",
+        "Bityard",
+        "CoinWpro",
+        "Coinegg",
     ]
 
 
@@ -59,6 +121,8 @@ Constructor.
         """
         self.start: datetime.datetime = start
         self.rng: np.random.Generator = np.random.default_rng()
+        self.shells: typing.List[ ShellCorp ] = []
+        self.xact_log: typing.List[ Transaction ] = []
 
 
     def rng_gaussian (
@@ -100,21 +164,22 @@ Sample random numbers from a Poisson distribution.
         cls,
         start: datetime.datetime,
         finish: datetime.datetime,
-        ) -> datetime:
+        ) -> datetime.datetime:
         """
 Sample random dates between two `datetime` objects.
         """
-        delta: timedelta = finish - start
+        delta: datetime.timedelta = finish - start
         rand_sec: int = random.randrange((delta.days * 24 * 60 * 60) + delta.seconds)
 
-        return start + timedelta(seconds = rand_sec)
+        return start + datetime.timedelta(seconds = rand_sec)
 
 
     def gen_xact_amount (
         self,
         ) -> NonNegativeFloat:
         """
-Generate the amount for a transaction, based on a random variable.
+Generate the amount for a transaction, based on a random variable,
+while staying under the banks' threshold limit for AML checks.
 
 returns:
     `amount`: transaction amount, non-negative, rounded to two decimal points.
@@ -129,80 +194,129 @@ returns:
         return amount
 
 
-class ShellCorp (BaseModel):
-    """
-A data class representing one shell company.
-    """
-    name: str
-    address: str
-    bank: str
-    balance: NonNegativeFloat = 0.0
+    def gen_xact_timing (
+        self,
+        start: datetime.datetime,
+        ) -> datetime.datetime:
+        """
+Generate the timing for a transaction, based on a random variable.
+
+returns:
+    `timing`: transaction datetime offset
+        """
+        gen_offset: float = self.rng_poisson(lambda_ = self.INTERDAY_MEDIAN)
+        timing: datetime.datetime = start + datetime.timedelta(hours = gen_offset * 24.0)
+
+        return timing
 
 
-class Transaction (BaseModel):
-    """
-A data class representing one money transfer transaction.
-    """
-    date: datetime.datetime
-    amount: NonNegativeFloat
-    remitter: str
-    receiver: str
-    description: str
+    def gen_shell_corps (
+        self,
+        shell_data: dict,
+        ) -> None:
+        """
+Instantiate the list of ShellCorp objects, assigning bank accounts
+and creating opening balances.
+        """
+        self.shells = [
+            ShellCorp(
+                name = name,
+                address = addrs[0],
+                bank = random.choice(self.SKETCH_BANKS),
+            )
+            for name, addrs in shell_data.items()
+        ]
+
+        ## create opening balances
+        for shell in self.shells:
+            for _ in range(random.randint(1, 5)):
+                xact: Transaction = Transaction(
+                    date = self.start + datetime.timedelta(days = random.randint(1, 7)),
+                    amount = round(self.gen_xact_amount(), -3),
+                    remitter = shell.bank,
+                    receiver = shell.name,
+                    descript = "local deposit",
+                )
+
+                self.xact_log.append(xact)
+                shell.take_xact(xact)
+
+
+    def do_deal (
+        self,
+        shell: ShellCorp,
+        ) -> None:
+        """
+Perform a "deal" to drain some of the laundered funds from a shell
+company's bank account.
+        """
+        amount: NonNegativeFloat = min(shell.balance, round(self.gen_xact_amount(), -3))
+        date: datetime.datetime = self.gen_xact_timing(shell.last_active)
+
+        deal: TradecraftDeal = TradecraftDeal.CRYPTO
+        receiver: str = random.choice(self.SKETCH_CRYPTO)
+        descript: str = "investment"
+
+        xact: Transaction = Transaction(
+            date = date,
+            amount = amount,
+            remitter = shell.name,
+            receiver = receiver,
+            descript = descript,
+        )
+
+        self.xact_log.append(xact)
+        shell.take_xact(xact, deposit = False)
+
+
+    def get_xact_df (
+        self,
+        ) -> pl.DataFrame:
+        """
+Returns a `polars` DataFrame of the generated transactions.
+        """
+        return pl.DataFrame([
+            json.loads(xact.model_dump_json())
+            for xact in self.xact_log
+        ]).sort("date")
 
 
 if __name__ == "__main__":
+    ## money laundering process via shell companies
+    ##  1. origins
+    ##  2. layering
+    ##  3. deals
+
     sim: Simulation = Simulation()
-    xact_log: typing.List[ Transaction ] = []
+    sim.gen_shell_corps(SHELL_DATA)
 
-    ## instantiate the ShellCorp objects, assigning bank accounts
-    shells: typing.List[ ShellCorp ] = [
-        ShellCorp(
-            name = name,
-            address = addrs[0],
-            bank = random.choice(sim.SKETCH_BANKS),
-        )
-        for name, addrs in SHELL_CORPS.items()
-    ]
+    ## drain accounts into deals
+    for shell in sim.shells:
+        while shell.balance > 0.0:
+            sim.do_deal(shell)
 
-    ## create opening balances
-    for shell in shells:
-        for _ in range(random.randint(1, 5)):
-            xact = Transaction(
-                date = sim.start + datetime.timedelta(days = random.randint(1, 7)),
-                amount = round(sim.gen_xact_amount(), -3),
-                remitter = shell.bank,
-                receiver = shell.name,
-                description = "local deposit",
-            )
+    ## report
+    df: pl.DataFrame = sim.get_xact_df()
+    ic(df)
 
-            xact_log.append(xact)
-            shell.balance += xact.amount
-
-
-    ic(xact_log)
-    ic(shells)
-
-
-## 1. origins
-## 2. layering
-## 3. deals
 
 ## plausible `origins`
 ##  - local bank transfer
-##  - Rosoboronexport
+##  - cryptocoin exchanges
 ##  - Amazon merchandise sales
+##  - Rosoboronexport
 
 ## plausible `layering` tradecraft
-##  - RMF bleed off N% on each step
 ##  - initial burst in volume after opening
 ##  - mutual payers/remitters
+##  - RMF bleed off N% on each step
 ##  - overnight balance low compared with total activity
-##  - reused invoices
+##  - reuse of invoices
 
 ## plausible `deals`
 ##  - local bank transfer
+##  - cryptocoin exchanges
 ##  - merchandise for Amazon
 ##  - Hermitage Capital Management
-##  - cryptocoin exchanges (BitMEX)
 ##  - real estate, property management, leases
 ##  - payroll outsourcing for "staff"
