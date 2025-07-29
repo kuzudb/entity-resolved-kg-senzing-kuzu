@@ -10,7 +10,7 @@ _The Data Money Files_ S1E3
 The authors Ray Blake and Graham Barrow describe this as:
 > "Simple and obvious clues that a given account is laundering money that if you know what you're looking for, stick out a mile."
 
-Synopsis: Transaction monitoring and alerts, to assess whether a bank account has been used for money laundering. In other words, this is a helpful tutorial for anyone new to anti-money laundering, or anyone thinking of becoming a money launderer.
+Synopsis: Transaction monitoring and alerts to assess whether a bank account has been used for money laundering. In other words, this is a helpful tutorial for anyone new to anti-money laundering, or anyone thinking of becoming a money launderer.
 
 
 ## total volume and daily volumes
