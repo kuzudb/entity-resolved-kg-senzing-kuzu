@@ -1,23 +1,20 @@
-# KGC 2025 Workshop
+# Creating high-quality knowledge graphs using Kùzu and Senzing
 
-## Creating high-quality knowledge graphs using Kùzu and Senzing
-
-This repo contains the code for a joint workshop between Kùzu and Senzing at KGC 2025.
-The focus is to show how to create high-quality knowledge graphs from heterogeneous
+This repo contains example code that shows how to create high-quality knowledge graphs from heterogeneous
 data sources using Kùzu -- which is an embedded, open source _graph database_ -- and
 Senzing -- which is an SDK for _entity resolution_.
 
-### Slides
+### KGC 2025 workshop
 
-To follow along, download the slides from the following links:
+For the KGC 2025 joint workshop jointly hosted by Senzing and Kuzu, you can download the slides from the following links:
 
 - Kuzu: [slides](https://docs.google.com/presentation/d/1tErhnbwkjSxREbfpxKdhSOXMwm9ReLKAYxm7_vl6J4U/view?usp=sharing)
 - Senzing: [slides](https://drive.google.com/file/d/1EL0TnzWDsNqKE53mPOwXc9UfImkgHH2q/view?usp=sharing)
 
 
-## Background
+### Background
 
-The workshop will demonstrate an _investigative graph_ analysis based on patterns of
+The workshop demonstrates an _investigative graph_ analysis based on patterns of
 bad-actor tradecraft. By connecting "risk" data and "link" data within a graph, we
 can show patterns of tradecraft such as money laundering, tax evasion, money mules,
 and so on. We'll use "slices" of datasets from the following open data providers:
@@ -25,7 +22,7 @@ and so on. We'll use "slices" of datasets from the following open data providers
   - <https://www.opensanctions.org/>
   - <https://www.openownership.org/>
 
-### OpenSanctions
+#### OpenSanctions
 
 [OpenSanctions](https://www.opensanctions.org/) provides the "risk" category of data.
 In other words, this describes people and organizations who are known risks for FinCrime.
@@ -33,7 +30,7 @@ There is also the [`yente`](https://github.com/opensanctions/yente) API which pr
 HTTP endpoints based on the [_FollowTheMoney_](https://followthemoney.tech/) data model
 used for investigations and OSInt.
 
-### Open Ownership
+#### Open Ownership
 
 [Open Ownership](https://www.openownership.org/) provides the "link" category of data.
 This describes [_ultimate beneficial ownership_](https://en.wikipedia.org/wiki/Beneficial_ownership)
