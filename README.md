@@ -294,8 +294,8 @@ was the whistleblower regarding massive scale money laundering at
 the Estonia branch of Danske Bank, which included the
 [Azerbaijani Laundromat](https://www.occrp.org/en/project/the-azerbaijani-laundromat)
 case.
-Simulation methods are defined in the `aml.py` Python module,
-based on analysis from known money laundering cases such as
+Simulation methods defined in the `aml.py` Python module are
+based on analysis from known money laundering cases, such as
 what was discovered about Danske Bank.
 
 In this workflow we will generate synthetic data to simulate money
