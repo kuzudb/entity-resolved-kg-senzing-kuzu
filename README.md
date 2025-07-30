@@ -291,15 +291,17 @@ fraud have been leaked.
 
 [Howard Wilkinson](https://www.ft.com/content/32d47fd8-c18b-11e8-8d55-54197280d3f7)
 was the whistleblower regarding massive scale money laundering at
-the Estonia branch of Danske Bank, including the
+the Estonia branch of Danske Bank, which included the
 [Azerbaijani Laundromat](https://www.occrp.org/en/project/the-azerbaijani-laundromat)
 case.
+Simulation methods are defined in the `aml.py` Python module,
+based on analysis from known money laundering cases such as
+what was discovered about Danske Bank.
 
-We will generate synthetic data to simulate money laundering. We'll
-use shell companies which were part of real-world fraud network, then
-generate simulated transactions based on statistical analysis of
-leaked bank data. Simulation methods are defined in the `aml.py`
-Python module.
+In this workflow we will generate synthetic data to simulate money
+laundering. We'll use shell companies which were part of real-world
+fraud network, then generate simulated transactions based on
+statistical analysis of leaked bank data.
 
 First we extract the shell companies from a possible fraud ring,
 then generate synthetic data:
