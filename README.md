@@ -298,12 +298,9 @@ Simulation methods defined in the `aml.py` Python module are
 based on analysis from known money laundering cases, such as
 what was discovered about Danske Bank.
 
-In this workflow we will generate synthetic data to simulate money
-laundering. We'll use shell companies which were part of real-world
-fraud network, then generate simulated transactions based on
-statistical analysis of leaked bank data.
-
-First we extract the shell companies from a possible fraud ring,
-then generate synthetic data:
+In this workflow we generate synthetic data to simulate money
+laundering. We use shell companies which were part of real-world fraud
+network, then generate simulated transactions based on statistical
+analysis of leaked bank data.
 
   - `aml_transact.ipynb`: extracts a fraud network, then generates transactions
