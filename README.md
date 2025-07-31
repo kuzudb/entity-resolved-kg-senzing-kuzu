@@ -63,9 +63,23 @@ from OpenSanctions and Open Ownership which connect to produce
 interesting subgraphs that illustrate patterns of bad-actor
 tradecraft.
 
-Follow the instructions in the [data/README.md](data/README.md) file
-to download the required data and inspect the JSON files to get an
-idea of their contents.
+Download these datasets from the following links:
+
+```bash
+wget https://raw.githubusercontent.com/DerwenAI/senzing_starter_kit/refs/heads/main/senzing_rootfs/data/open-sanctions.json -O data/open-sanctions.json
+wget https://raw.githubusercontent.com/DerwenAI/senzing_starter_kit/refs/heads/main/senzing_rootfs/data/open-ownership.json -O data/open-ownership.json
+```
+
+This will create two files in the `data` subdirectory:
+
+- `open-sanctions.json`
+- `open-ownership.json`
+
+Take a look at these JSON files to get an idea of their contents.
+
+If ever needed as a fallback strategy, the results exported from
+Senzing for this use case in are available for download at
+[`export.json`](https://storage.googleapis.com/erkg/starterkit/export.json)
 
 
 ## Tools
