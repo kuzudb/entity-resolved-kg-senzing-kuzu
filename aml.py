@@ -380,10 +380,14 @@ if __name__ == "__main__":
     sim: Simulation = Simulation()
     sim.gen_shell_corps(SHELL_DATA)
 
-    ## layering
-    sim.layer_rmf()
+    ## perform _layering_ to shuffle sources of funds,
+    ## and rinse/lather/repeat a few times
+    PRESS_YOUR_LUCK: int = 3
 
-    ## drain accounts into deals
+    for _ in range(PRESS_YOUR_LUCK):
+        sim.layer_rmf()
+
+    ## cash out: drain accounts into deals
     sim.drain_into_deals()
 
     ## export synthetic data
