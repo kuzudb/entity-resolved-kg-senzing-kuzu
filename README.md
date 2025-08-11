@@ -1,28 +1,35 @@
-# Creating high-quality knowledge graphs using Kùzu and Senzing
+# Knowledge Graph Workshop
 
-This repo contains example code that shows how to create high-quality knowledge graphs from heterogeneous
-data sources using Kùzu -- which is an embedded, open source _graph database_ -- and
-Senzing -- which is an SDK for _entity resolution_.
+## Creating high-quality knowledge graphs using Kuzu and Senzing
 
-### KGC 2025 workshop
+This repo contains the code for a joint workshop between Kuzu and
+Senzing at at graph conferences in 2025.
 
-For the KGC 2025 joint workshop jointly hosted by Senzing and Kuzu, you can download the slides from the following links:
+The focus is to show how to create high-quality knowledge graphs from
+heterogeneous data sources using Kuzu -- which is an embedded, open
+source _graph database_ -- and Senzing -- which is an SDK for _entity
+resolution_.
+
+### Slides
+
+To follow along, download the slides from the following links:
 
 - Kuzu: [slides](https://docs.google.com/presentation/d/1tErhnbwkjSxREbfpxKdhSOXMwm9ReLKAYxm7_vl6J4U/view?usp=sharing)
 - Senzing: [slides](https://drive.google.com/file/d/1EL0TnzWDsNqKE53mPOwXc9UfImkgHH2q/view?usp=sharing)
 
 
-### Background
+## Background
 
-The workshop demonstrates an _investigative graph_ analysis based on patterns of
-bad-actor tradecraft. By connecting "risk" data and "link" data within a graph, we
-can show patterns of tradecraft such as money laundering, tax evasion, money mules,
-and so on. We'll use "slices" of datasets from the following open data providers:
+The workshop will demonstrate an _investigative graph_ analysis based
+on patterns of bad-actor tradecraft. By connecting "risk" data and
+"link" data within a graph, we can show patterns of tradecraft such as
+money laundering, tax evasion, money mules, and so on. We'll use
+"slices" of datasets from the following open data providers:
 
   - <https://www.opensanctions.org/>
   - <https://www.openownership.org/>
 
-#### OpenSanctions
+### OpenSanctions
 
 [OpenSanctions](https://www.opensanctions.org/) provides the "risk" category of data.
 In other words, this describes people and organizations who are known risks for FinCrime.
@@ -30,7 +37,7 @@ There is also the [`yente`](https://github.com/opensanctions/yente) API which pr
 HTTP endpoints based on the [_FollowTheMoney_](https://followthemoney.tech/) data model
 used for investigations and OSInt.
 
-#### Open Ownership
+### Open Ownership
 
 [Open Ownership](https://www.openownership.org/) provides the "link" category of data.
 This describes [_ultimate beneficial ownership_](https://en.wikipedia.org/wiki/Beneficial_ownership)
@@ -48,28 +55,47 @@ There is also a repository with these datasets which are already formatted for
 use in Senzing <https://www.opensanctions.org/docs/bulk/senzing/> although these
 full sources are quite large to download.
 
-## Dataset
 
-For the purposes of this tutorial, we've selected "slices" of data from
-OpenSanctions and Open Ownership which connect to produce interesting subgraphs that illustrate
-patterns of bad-actor tradecraft. 
+## Datasets
 
-Follow the instructions in the [data/README.md](data/README.md) file
-to download the required data and inspect the JSON files to get an idea of 
-their contents.
+For the purposes of this tutorial, we've selected "slices" of data
+from OpenSanctions and Open Ownership which connect to produce
+interesting subgraphs that illustrate patterns of bad-actor
+tradecraft.
+
+Download these datasets from the following links:
+
+```bash
+wget https://raw.githubusercontent.com/DerwenAI/senzing_starter_kit/refs/heads/main/senzing_rootfs/data/open-sanctions.json -O data/open-sanctions.json
+wget https://raw.githubusercontent.com/DerwenAI/senzing_starter_kit/refs/heads/main/senzing_rootfs/data/open-ownership.json -O data/open-ownership.json
+```
+
+This will create two files in the `data` subdirectory:
+
+- `open-sanctions.json`
+- `open-ownership.json`
+
+Take a look at these JSON files to get an idea of their contents.
+
+If ever needed as a fallback strategy, the results exported from
+Senzing for this use case in are available for download at
+[`export.json`](https://storage.googleapis.com/erkg/starterkit/export.json)
+
 
 ## Tools
 
-We will be using Kùzu as the _graph database_ and Senzing as the _entity resolution_ engine.
-Docker is used to run both the Senzing SDK and Kùzu Explorer, a web-based UI for Kùzu.
-Visit the websites to see further instructions for each tool:
+We will be using Kuzu as the _graph database_ and Senzing as the
+_entity resolution_ engine. Docker is used to run both the Senzing
+SDK and Kuzu Explorer, a web-based UI for Kuzu. Visit the websites to
+see further instructions for each tool:
 
  - [Docker](https://docs.docker.com/desktop/)
- - [Kùzu](https://kuzudb.com/)
+ - [Kuzu](https://kuzudb.com/)
  - [Senzing](https://senzing.com/) 
 
-**Important:** You will need to have Docker downloaded and installed on your laptop to run this tutorial.
-Then we will run the Senzing SDK within a Docker container and load Kùzu as a Python package.
+**Important:** You will need to have Docker downloaded and installed
+on your laptop to run this tutorial.  Then we will run the Senzing SDK
+within a Docker container and load Kuzu as a Python package.
 
 
 ## Setup
@@ -111,8 +137,9 @@ pip install -r requirements.txt
 
 ## Running the Senzing container
 
-To run the entity resolution pipeline, we will launch Senzing in Docker, with the data directory
-mounted as an external volume, and connect into the container in a shell prompt:
+To run the entity resolution pipeline, we will launch Senzing in
+Docker, with the data directory mounted as an external volume, then
+connect into the container in a shell prompt:
 
 ```bash
 docker run -it --rm --volume ./data:/tmp/data senzing/demo-senzing
@@ -168,15 +195,17 @@ exit
 
 ## Running the workflow
 
-The workshop steps are implemented in the `create_graph.ipynb` notebook. A Python script version is
-also provided in the `create_graph.py` file if you want to run the workflow without the Jupyter notebook.
+The workshop steps are implemented in the `create_graph.ipynb`
+notebook. A Python script version is also provided in the
+`create_graph.py` file if you want to run the workflow without the
+Jupyter notebook.
 
 The following files contain utility functions for the sequence of
 preprocessing steps required to create the graph:
 
- - `open_sanctions.py`: Handles the processing of the OpenSanctions data.
- - `open_ownership.py`: Handles the processing of the Open Ownership data.
- - `process_senzing.py`: Handles the processing of the entity resolution export from Senzing.
+ - `open_sanctions.py`: Handles processing of OpenSanctions data.
+ - `open_ownership.py`: Handles processing of Open Ownership data.
+ - `process_senzing.py`: Handles processing of the entity resolution export from Senzing.
 
 The steps to run the preprocessing, graph creation, and exploration
 steps are in the following files:
@@ -184,19 +213,23 @@ steps are in the following files:
  - `create_graph.ipynb`: Runs the preprocessing steps, creates the graph, and performs some basic exploration and visualization.
  - `create_graph.py`: Contains the same functionality as the notebook above, though as a Python script.
 
-To launch the `create_graph.ipynb` notebook in JupyterLab, run the following commands from the root directory of this repo:
+To launch the `create_graph.ipynb` notebook in JupyterLab, run the
+following commands from the root directory of this repo:
 
 ```bash
 source .venv/bin/activate
 .venv/bin/jupyter-lab
 ```
 
-Further visual exploration of the graph can be done using the Kùzu Explorer UI, whose steps are described below.
+Further visual exploration of the graph can be done using the Kuzu
+Explorer UI, whose steps are described below.
 
-## Graph visualization in Kùzu Explorer
 
-To visualize the graph in Kùzu using its browser-based UI, Kùzu Explorer, run the following commands from this
-root directory where the `docker-compose.yml` file is:
+## Graph visualization in Kuzu Explorer
+
+To visualize the graph in Kuzu using its browser-based UI, Kuzu
+Explorer, run the following commands from this root directory where
+the `docker-compose.yml` file is:
 
 ```bash
 docker compose up
@@ -211,11 +244,14 @@ docker run -p 8000:8000 \
            --rm kuzudb/explorer:latest
 ```
 
-This will download and run the Kùzu Explorer image, and you can access the UI at <http://localhost:8000>
+This will download and run the Kuzu Explorer image, and you can access
+the UI at <http://localhost:8000>
 
-Make sure that the path to the database directory is set to the name of the Kùzu database directory in the code!
+Make sure that the path to the database directory is set to the name
+of the Kuzu database directory in the code!
 
-In the Explorer UI, enter the following Cypher query in the shell editor to visualize the graph:
+In the Explorer UI, enter the following Cypher query in the shell
+editor to visualize the graph:
 
 ```cypher
 MATCH (a:Entity)-[b*1..3]->(c)
@@ -225,12 +261,16 @@ LIMIT 100
 
 ![](./assets/example-subgraph.png)
 
+
 ## Optional: NetworkX
 
-The `create_graph.ipynb` notebook also contains an optional step to convert the Kùzu graph to a NetworkX graph.
-We run a NetworkX graph algorithm called Betweenness Centrality to find the most important nodes in the graph.
+The `create_graph.ipynb` notebook also contains an optional step to
+convert the Kuzu graph to a NetworkX graph.  We run a NetworkX graph
+algorithm called Betweenness Centrality to find the most important
+nodes in the graph.
 
-Victor Nyland Poulsen is the entity in the graph with the highest betweenness centrality.
+"Victor Nyland Poulsen" is the entity in the graph with the highest
+betweenness centrality.
 
 | id | descrip | betweenness_centrality |
 | --- | --- | --- |
@@ -242,5 +282,40 @@ Victor Nyland Poulsen is the entity in the graph with the highest betweenness ce
 
 ![](./assets/betweenness-centrality.png)
 
-The visualization shown uses the circular layout in yFiles to represent a large number of relationships more compactly.
-Check out the notebook and try more graph visualizations and algorithms to further analyze the data!
+The visualization shown uses the circular layout in yFiles to
+represent a large number of relationships more compactly.  Check out
+the notebook and try more graph visualizations and algorithms to
+further analyze the data!
+
+
+## Money Laundering
+
+The [AML.md](AML.md) file enumerates heuristics used by fraud analysts
+for transaction monitoring and alerts. These consideration describe
+how to assess if a bank account has been used for money laundering. In
+other words, this is helpful info for anyone who's new to anti-money
+laundering (AML) or anyone thinking of becoming a money launderer.
+
+While it's possible to get open data describing companies, their
+ownership, and sanctions risks -- i.e., the "risk" and "link" data in
+an investigative graph -- it's difficult to obtain "event" data such
+as financial transactions. Generally this class of data is much too
+confidential; however, in some cases transactions for large-scale
+fraud have been leaked.
+
+[Howard Wilkinson](https://www.ft.com/content/32d47fd8-c18b-11e8-8d55-54197280d3f7)
+was the whistleblower regarding massive scale money laundering at
+the Estonia branch of Danske Bank, which included the
+[Azerbaijani Laundromat](https://www.occrp.org/en/project/the-azerbaijani-laundromat)
+case.
+
+Simulation methods defined in the `aml.py` Python module are
+based on analysis from known money laundering cases, such as
+what was discovered about Danske Bank.
+
+In this workflow we generate synthetic data to simulate money
+laundering. We use shell companies which were part of real-world fraud
+network, then generate simulated transactions based on statistical
+analysis of leaked bank data.
+
+  - `aml_transact.ipynb`: extract a fraud network, then generate transactions
