@@ -26,6 +26,9 @@ dependencies = [
     "networkx==3.4.2",
     "pydantic>=2.11.7",
     "numpy>=2.3.2",
+    "matplotlib>=3.10.5",
+    "seaborn>=0.13.2",
+    "pyvis>=0.3.2",
 ]
 
 [dependency-groups]
