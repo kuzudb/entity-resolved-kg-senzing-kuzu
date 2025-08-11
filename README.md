@@ -318,4 +318,4 @@ laundering. We use shell companies which were part of real-world fraud
 network, then generate simulated transactions based on statistical
 analysis of leaked bank data.
 
-  - `aml_transact.ipynb`: extracts a fraud network, then generates transactions
+  - `aml_transact.ipynb`: extract a fraud network, then generate transactions
