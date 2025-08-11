@@ -260,7 +260,7 @@ and creating opening balances.
             for _ in range(random.randint(1, 5)):
                 xact: Transaction = Transaction(
                     date = self.start + datetime.timedelta(days = random.randint(1, 7)),
-                    amount = round(self.gen_xact_amount(), -3),
+                    amount = round(round(self.gen_xact_amount(), -3), 2),
                     remitter = shell.bank,
                     receiver = shell.name,
                     descript = "local deposit",
@@ -288,7 +288,7 @@ Simulate layering based on _rapid movement of funds_ (RMF) tradecraft.
         ])
 
         date: datetime.datetime = self.gen_xact_timing(lead_shell.last_active)
-        amount: NonNegativeFloat = round(self.gen_xact_amount(), -3)
+        amount: NonNegativeFloat = round(round(self.gen_xact_amount(), -3), 2)
 
         xact: Transaction = Transaction(
             date = date,
@@ -311,7 +311,7 @@ Simulate layering based on _rapid movement of funds_ (RMF) tradecraft.
 
             xact = Transaction(
                 date = date,
-                amount = amount,
+                amount = round(amount, 2),
                 remitter = shell.name,
                 receiver = next_shell.name,
                 descript = "invoiced services",
@@ -343,7 +343,7 @@ company's bank account.
 
         xact: Transaction = Transaction(
             date = date,
-            amount = amount,
+            amount = round(amount, 2),
             remitter = shell.name,
             receiver = receiver,
             descript = descript,

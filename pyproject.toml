@@ -1,8 +1,16 @@
 [project]
-name = "kgc-2025-workshop"
-version = "0.1.0"
-description = "Add your description here"
+name = "entity-resolved-kg-senzing-kuzu"
+version = "0.2.0"
+description = "Example code to create high-quality knowledge graphs using entity resolution with Kuzu and Senzing"
+
 readme = "README.md"
+license = { file = "LICENSE" }
+
+authors = [
+    { name = "Prashanth Rao", email = "prashanth@kuzudb.com" },
+    { name = "Paco Nathan", email = "paco@derwen.ai" },
+]
+
 requires-python = ">=3.13"
 dependencies = [
     "icecream==2.1.4",
@@ -12,7 +20,7 @@ dependencies = [
     "polars==1.29.0",
     "pyarrow==20.0.0",
     "python-dotenv==1.1.0",
-    "watermark==2.5.0",
+    "watermark>=2.5.0",
     "yfiles-jupyter-graphs==1.10.5",
     "yfiles-jupyter-graphs-for-kuzu==0.0.4",
     "networkx==3.4.2",

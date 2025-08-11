@@ -251,6 +251,50 @@ wheels = [
 ]
 
 [[package]]
+name = "entity-resolved-kg-senzing-kuzu"
+version = "0.2.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "icecream" },
+    { name = "jupyterlab" },
+    { name = "kuzu" },
+    { name = "networkx" },
+    { name = "numpy" },
+    { name = "polars" },
+    { name = "pyarrow" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "watermark" },
+    { name = "yfiles-jupyter-graphs" },
+    { name = "yfiles-jupyter-graphs-for-kuzu" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "ipykernel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "icecream", specifier = "==2.1.4" },
+    { name = "jupyterlab", specifier = "==4.4.1" },
+    { name = "kuzu", specifier = "==0.9.0" },
+    { name = "networkx", specifier = "==3.4.2" },
+    { name = "networkx", specifier = ">=3.4.2" },
+    { name = "numpy", specifier = ">=2.3.2" },
+    { name = "polars", specifier = "==1.29.0" },
+    { name = "pyarrow", specifier = "==20.0.0" },
+    { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "python-dotenv", specifier = "==1.1.0" },
+    { name = "watermark", specifier = ">=2.5.0" },
+    { name = "yfiles-jupyter-graphs", specifier = "==1.10.5" },
+    { name = "yfiles-jupyter-graphs-for-kuzu", specifier = "==0.0.4" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "ipykernel", specifier = ">=6.29.5" }]
+
+[[package]]
 name = "executing"
 version = "2.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -679,50 +723,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/a1/94/766b8199e8a902a4c
 wheels = [
     { url = "https://files.pythonhosted.org/packages/64/7a/f2479ba401e02f7fcbd3fc6af201eac888eaa188574b8e9df19452ab4972/jupyterlab_widgets-3.0.14-py3-none-any.whl", hash = "sha256:54c33e3306b7fca139d165d6190dc6c0627aafa5d14adfc974a4e9a3d26cb703", size = 213999 },
 ]
-
-[[package]]
-name = "kgc-2025-workshop"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "icecream" },
-    { name = "jupyterlab" },
-    { name = "kuzu" },
-    { name = "networkx" },
-    { name = "numpy" },
-    { name = "polars" },
-    { name = "pyarrow" },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-    { name = "watermark" },
-    { name = "yfiles-jupyter-graphs" },
-    { name = "yfiles-jupyter-graphs-for-kuzu" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "ipykernel" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "icecream", specifier = "==2.1.4" },
-    { name = "jupyterlab", specifier = "==4.4.1" },
-    { name = "kuzu", specifier = "==0.9.0" },
-    { name = "networkx", specifier = "==3.4.2" },
-    { name = "networkx", specifier = ">=3.4.2" },
-    { name = "numpy", specifier = ">=2.3.2" },
-    { name = "polars", specifier = "==1.29.0" },
-    { name = "pyarrow", specifier = "==20.0.0" },
-    { name = "pydantic", specifier = ">=2.11.7" },
-    { name = "python-dotenv", specifier = "==1.1.0" },
-    { name = "watermark", specifier = "==2.5.0" },
-    { name = "yfiles-jupyter-graphs", specifier = "==1.10.5" },
-    { name = "yfiles-jupyter-graphs-for-kuzu", specifier = "==0.0.4" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "ipykernel", specifier = ">=6.29.5" }]
 
 [[package]]
 name = "kuzu"
