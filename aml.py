@@ -11,6 +11,7 @@ which emulate typical tradecraft patterns employed in money laundering.
 from enum import StrEnum, auto
 import datetime
 import json
+import math
 import random
 import sys
 import typing
@@ -19,20 +20,6 @@ from icecream import ic
 from pydantic import BaseModel, NonNegativeFloat
 import numpy as np
 import polars as pl
-
-
-SHELL_DATA: typing.Dict[ str, list ] = {
-    "BARLLOWS SERVICES LTD": [
-        "3 Market Parade, 41 East Street, Bromley, BR1 1QN",
-        "31 Quernmore Close, Bromley, Kent, United Kingdom, BR1 4EL",
-    ],
-    "LMAR (GB) LTD": [
-        "31 Quernmore Close, Bromley, Kent, United Kingdom, BR1 4EL",
-    ],
-    "WELLHANCIA HEALTH CARE LTD": [
-        "31 Quernmore Close, Bromley, BR1 4EL",
-    ],
-}
 
 
 class Transaction (BaseModel):
@@ -233,7 +220,16 @@ returns:
     `timing`: transaction datetime offset
         """
         gen_offset: float = self.rng_poisson(lambda_ = self.INTERDAY_MEDIAN)
-        timing: datetime.datetime = start + datetime.timedelta(hours = gen_offset * 24.0)
+        hours: int = math.floor(gen_offset * 24.0)
+        delta: datetime.timedelta = datetime.timedelta(hours = hours)
+        timing: datetime.datetime = start
+
+        try:
+            timing = start + delta
+        except OverflowError as ex:
+            ic(ex)
+            ic(start.isoformat(), gen_offset, hours, delta)
+            sys.exit(0)
 
         return timing
 
@@ -255,7 +251,7 @@ and creating opening balances.
             for name, addrs in shell_data.items()
         ]
 
-        ## create opening balances
+        # create opening balances
         for shell in self.shells:
             for _ in range(random.randint(1, 5)):
                 xact: Transaction = Transaction(
@@ -306,6 +302,7 @@ Simulate layering based on _rapid movement of funds_ (RMF) tradecraft.
         # until dumping back to the first one
         for ind, shell in enumerate(shell_seq):
             next_shell: ShellCorp = shell_seq[(ind + 1) % len(shell_seq)]
+
             date = self.gen_xact_timing(date)
             amount *= 1.0 - self.rng_exponential(scale = .1)
 
@@ -343,7 +340,7 @@ company's bank account.
 
         xact: Transaction = Transaction(
             date = date,
-            amount = round(amount, 2),
+            amount = math.floor(amount * 100.0) / 100.0,
             remitter = shell.name,
             receiver = receiver,
             descript = descript,
@@ -360,7 +357,7 @@ company's bank account.
 Generate deals to drain the remaining balances for each shell company.
         """
         for shell in self.shells:
-            while shell.balance > 0.0:
+            while shell.balance > 0.01:
                 self.gen_deal(shell)
 
 
@@ -377,6 +374,19 @@ Returns a `polars` DataFrame of the generated transactions.
 
 
 if __name__ == "__main__":
+    SHELL_DATA: typing.Dict[ str, list ] = {
+        "BARLLOWS SERVICES LTD": [
+            "3 Market Parade, 41 East Street, Bromley, BR1 1QN",
+            "31 Quernmore Close, Bromley, Kent, United Kingdom, BR1 4EL",
+        ],
+        "LMAR (GB) LTD": [
+            "31 Quernmore Close, Bromley, Kent, United Kingdom, BR1 4EL",
+        ],
+        "WELLHANCIA HEALTH CARE LTD": [
+            "31 Quernmore Close, Bromley, BR1 4EL",
+        ],
+    }
+
     sim: Simulation = Simulation()
     sim.gen_shell_corps(SHELL_DATA)
 
